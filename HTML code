@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Program</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="output"></div>
+    <script>
+        // ... [Your JavaScript code goes here]
+
+        function writeToOutput(message) {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML += message + '<br>';
+        }
+
+        function clearOutput() {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '';
+        }
+
+        while (true) {
+            if (currentAccountIndex === -1) {
+                writeToOutput('<br>Welcome to the ATM');
+                writeToOutput('1. Create Account');
+                writeToOutput('2. Login');
+                writeToOutput('3. Exit');
+            } else {
+                writeToOutput('<br>ATM Menu:');
+                writeToOutput('1. Check Balance');
+                writeToOutput('2. Deposit');
+                writeToOutput('3. Withdraw');
+                writeToOutput('4. View Transaction History');
+                writeToOutput('5. Logout');
+            }
+
+            const choice = parseInt(prompt('Enter your choice:'));
+
+            if (currentAccountIndex === -1) {
+                switch (choice) {
+                    case 1:
+                        createAccount();
+                        break;
+                    case 2:
+                        if (authenticateAccount()) {
+                            writeToOutput('Login successful.');
+                        } else {
+                            writeToOutput('Login failed. Please check your account number and PIN.');
+                        }
+                        break;
+                    case 3:
+                        writeToOutput('Thank you for using this ATM. Goodbye!');
+                        break;
+                    default:
+                        writeToOutput('Invalid choice. Please select a valid option.');
+                }
+            } else {
+                switch (choice) {
+                    case 1:
+                        displayBalance(accounts[currentAccountIndex]);
+                        break;
+                    case 2:
+                        deposit(accounts[currentAccountIndex]);
+                        break;
+                    case 3:
+                        withdraw(accounts[currentAccountIndex]);
+                        break;
+                    case 4:
+                        showHistory(accounts[currentAccountIndex]);
+                        break;
+                    case 5:
+                        writeToOutput('Logout successful. Thank you for using this ATM. Goodbye!');
+                        currentAccountIndex = -1;
+                        break;
+                    default:
+                        writeToOutput('Invalid choice. Please select a valid option.');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
