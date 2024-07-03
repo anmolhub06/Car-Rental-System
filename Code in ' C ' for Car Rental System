@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define NUM_CARS 3
+#define DAILY_RATE 50.00
+#define MAX_RENTALS 100
+#define MAX_NAME_LENGTH 50
+
+struct Car {
+    int id;
+    char brand[MAX_NAME_LENGTH];
+    char model[MAX_NAME_LENGTH];
+    int year;
+    float dailyRate;
+    int available;
+};
+
+struct Rental {
+    int rentalId;
+    int carId;
+    char customerName[MAX_NAME_LENGTH];
+    int days;
+    float totalCost;
+};
+
+// Function to display car details
+void displayCar(struct Car car) {
+    printf("ID: %d\n", car.id);
+    printf("Brand: %s\n", car.brand);
+    printf("Model: %s\n", car.model);
+    printf("Year: %d\n", car.year);
+    printf("Daily Rate: $%.2f\n", car.dailyRate);
+    printf("Available: %s\n", car.available ? "Yes" : "No");
+    printf("\n");
+}
+
+// Function to display rental details
+// Function to display rental details
+// Function to display rental details
+void displayRental(struct Rental rental) {
+    printf("Rental ID: %d\n", rental.rentalId);
+    printf("Car ID: %d\n", rental.carId);
+    printf("Customer Name: %s\n", rental.customerName);
+    printf("Days: %d\n", rental.days);
+    printf("Total Cost: $%.2f\n", rental.totalCost);
+    printf("\n");
+}
+
+
+
+// Function to rent a car
+void rentCar(struct Car *cars, int carId, struct Rental *rentals, int *rentalId) {
+    int days;
+    char customerName[50];
+
+    printf("Enter customer name: ");
+    scanf("%s", customerName);
+
+    printf("Enter number of days for rental: ");
+    scanf("%d", &days);
+
+    // Validate input
+    if (days <= 0) {
+        printf("Invalid number of days. Please enter a positive integer.\n");
+        return;
+    }
+
+    // Calculate total cost
+    float totalCost = days * DAILY_RATE;
+
+    // Find the selected car
+    struct Car *selectedCar = NULL;
+    for (int i = 0; i < NUM_CARS; i++) {
+        if (cars[i].id == carId && cars[i].available) {
+            selectedCar = &cars[i];
+            break;
+        }
+    }
+
+    // Check if the car is available
+    if (selectedCar != NULL) {
+        // Update car availability
+        selectedCar->available = 0;
+
+        // Record the rental
+        rentals[*rentalId] = (struct Rental){*rentalId + 1, selectedCar->id, "", days, totalCost};
+        strncpy(rentals[*rentalId].customerName, customerName, sizeof(rentals[*rentalId].customerName) - 1);
+        (*rentalId)++;
+
+        printf("Car rented successfully!\n");
+    } else {
+        printf("Car not available for rental.\n");
+    }
+}
+
+
+int main() {
+    struct Car cars[NUM_CARS] = {
+        {1, "Toyota", "Camry", 2019, DAILY_RATE, 1},
+        {2, "Honda", "Accord", 2020, DAILY_RATE, 1},
+        {3, "Ford", "Focus", 2018, DAILY_RATE, 1}
+    };
+
+    struct Rental rentals[MAX_RENTALS];
+    int rentalId = 0;
+
+    // Display available cars
+    printf("Available Cars:\n");
+    for (int i = 0; i < NUM_CARS; i++) {
+        displayCar(cars[i]);
+    }
+
+    // Rent a car
+    rentCar(cars, 1, rentals, &rentalId);
+
+    // Display rental information
+    printf("Rental Information:\n");
+    for (int i = 0; i < rentalId; i++) {
+        displayRental(rentals[i]);
+    }
+
+    return 0;
+}
